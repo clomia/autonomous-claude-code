@@ -12,9 +12,15 @@
 
 claude-automata는 위 자율 AI 시스템의 구현체이다. Claude Code를 AI 엔진으로 사용하며, macOS에서 영속적으로 동작한다. 소유자는 Slack을 통해 시스템과 비동기로 소통한다.
 
-## 사용
+## 요구 환경
 
-**Prerequisites**: [uv](https://docs.astral.sh/uv/)
+- **macOS** — launchd LaunchAgent로 영속 실행되므로 macOS에서만 동작한다.
+- **Claude Code** — `claude` CLI가 설치되어 있고 `claude login`으로 로그인이 완료된 상태여야 한다.
+- **Claude Max 구독** — Claude Max 요금제가 필요하다. API 키가 아닌 구독 기반으로 동작한다.
+- **uv** — Python 패키지 관리에 [uv](https://docs.astral.sh/uv/)를 사용한다.
+- **Slack 워크스페이스** — 소유자와의 통신 채널로 Slack을 사용한다. Bot Token과 App Token이 필요하다.
+
+## 설치 및 시작
 
 시스템을 설치할 디렉토리 경로를 지정하여 실행한다. 이 디렉토리가 자율 시스템의 작업 공간이 된다.
 
