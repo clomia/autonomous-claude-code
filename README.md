@@ -6,13 +6,20 @@
 
 **Prerequisites**: [uv](https://docs.astral.sh/uv/)
 
+시스템을 설치할 디렉토리 경로를 지정하여 실행한다. 이 디렉토리가 자율 시스템의 작업 공간이 된다.
+
 ```bash
-uv run https://raw.githubusercontent.com/clomia/claude-automata/main/create.py my-agent
-cd my-agent
+# 원하는 경로에 프로젝트 생성
+uv run https://raw.githubusercontent.com/clomia/claude-automata/main/create.py ~/my-agent
+
+# 생성된 디렉토리로 이동 후 설정 및 시작
+cd ~/my-agent
 uv sync
 uv run automata configure
 uv run automata start
 ```
+
+`automata configure`에서 Slack 토큰과 시스템의 목적을 입력하면 자율 운영이 시작된다.
 
 ## 개발
 
@@ -30,4 +37,4 @@ uv run automata start
 
 ### 설계 문서
 
-설계 문서는 `design/` 디렉토리에 있다. `design/DESIGN.md`가 루트 문서이다.
+설계 문서는 `design/` 디렉토리에 있다. `design/root.md`가 루트 문서이다.

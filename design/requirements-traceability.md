@@ -381,7 +381,7 @@
 | 항목 | 내용 |
 |------|------|
 | **설계 결정** | OAuth 기반 Claude Max 구독 사용. `ANTHROPIC_API_KEY` 환경변수 미설정 (설정 시 API 과금으로 전환되는 버그 방지). `claude login` 사전 완료 전제 |
-| **구현 위치** | Session Manager ([session-manager.md](components/session-manager.md) §4), DESIGN.md §7 |
+| **구현 위치** | Session Manager ([session-manager.md](components/session-manager.md) §4), root.md §7 |
 | **검증 방법** | `claude login`이 완료된 환경에서 API 키 없이 시스템이 동작함을 확인 |
 
 ---
@@ -422,6 +422,6 @@
 | D-3 | 업데이트 없음 | ✅ 설계됨 | self-improvement.md |
 | D-4 | macOS | ✅ 설계됨 | supervisor.md §4-6 |
 | D-5 | uv + Python 3.14 | ✅ 설계됨 | directory-structure.md §1 |
-| D-6 | Claude Max | ✅ 설계됨 | session-manager.md §4, DESIGN.md §7 |
+| D-6 | Claude Max | ✅ 설계됨 | session-manager.md §4, root.md §7 |
 
 **전체 33개 요구사항 중 33개 설계됨 (100%)**
