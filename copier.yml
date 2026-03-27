@@ -1,4 +1,4 @@
-_subdirectory: dist
+_subdirectory: src
 _min_copier_version: "9.0.0"
 
 _exclude:
