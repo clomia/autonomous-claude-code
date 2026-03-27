@@ -1,0 +1,20 @@
+[project]
+name = "claude-automata"
+version = "0"
+description = "Autonomous AI System — 목적을 가지고 AI를 영속적으로 실행시키는 재귀적 자기개선 시스템"
+requires-python = ">=3.10"
+dependencies = ["copier>=9.0"]
+license = "MIT"
+
+[project.urls]
+Repository = "https://github.com/clomia/claude-automata"
+
+[project.scripts]
+claude-automata = "create:main"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["create.py"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

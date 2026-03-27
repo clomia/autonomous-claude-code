@@ -29,7 +29,7 @@ claude-automata는 위 자율 AI 시스템의 구현체이다. Claude Code를 AI
 
 ```bash
 # 원하는 경로에 프로젝트 생성
-uv run https://raw.githubusercontent.com/clomia/claude-automata/main/create.py ~/my-agent
+uvx claude-automata ~/my-agent
 
 # 생성된 디렉토리로 이동 후 설정 및 시작
 cd ~/my-agent
