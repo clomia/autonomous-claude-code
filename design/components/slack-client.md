@@ -100,7 +100,7 @@ class SlackClient:
         self._rate_limit_until: float = 0.0
 
         # 로거
-        self._logger = logging.getLogger("acc.slack")
+        self._logger = logging.getLogger("automata.slack")
 
     # ─── Lifecycle ───────────────────────────────────────
 
@@ -380,7 +380,7 @@ class SlackClient:
 각 Owner 요청은 독립적인 Slack 스레드를 가진다 (요구사항 O-2, O-3).
 
 ```
-#acc-channel
+#automata-channel
 ├── [메시지] 🙋 Owner 확인 필요: 데이터베이스 스키마 검토 (REQ-001)
 │   └── [답글] Owner: "PostgreSQL로 진행해주세요"        ← 이것이 answer
 │   └── [답글] Bot: "답변이 반영되었습니다 ✅"
@@ -969,7 +969,7 @@ async def _connection_monitor(self) -> None:
 # Slack API > Your Apps > Create New App > From an app manifest
 
 display_information:
-  name: ACC (Autonomous Claude Code)
+  name: Claude Automata
   description: 자율 AI 시스템의 Owner 통신 채널
   background_color: "#1a1a2e"
   long_description: |
@@ -978,7 +978,7 @@ display_information:
 
 features:
   bot_user:
-    display_name: ACC Bot
+    display_name: Automata Bot
     always_online: true
   app_home:
     home_tab_enabled: false
@@ -1022,7 +1022,7 @@ settings:
 
 2. Basic Information → App-Level Tokens
    - "Generate Token and Scopes" 클릭
-   - Token Name: "acc-socket"
+   - Token Name: "automata-socket"
    - Scope: connections:write 추가
    - Generate → xapp-... 토큰 복사
 
@@ -1031,7 +1031,7 @@ settings:
    - Bot User OAuth Token (xoxb-...) 복사
 
 4. 시스템 설정
-   - `acc configure` 실행 시:
+   - `automata configure` 실행 시:
      - SLACK_BOT_TOKEN=xoxb-...
      - SLACK_APP_TOKEN=xapp-...
      - SLACK_CHANNEL_ID=C0xxxxxxx (사용할 채널 ID)

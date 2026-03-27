@@ -38,8 +38,8 @@ claude-automata/
 uv run https://raw.githubusercontent.com/<owner>/claude-automata/main/create.py my-agent
 cd my-agent
 uv sync
-uv run acc configure
-uv run acc start
+uv run automata configure
+uv run automata start
 ```
 
 `create.py`는 PEP 723 inline metadata로 copier를 의존성 선언한다. `uv run`이 copier를 임시 환경에 설치하고 `copier.yml`의 `_subdirectory: dist` 설정에 따라 `src/` 내용만 사용자 프로젝트로 복사한다.

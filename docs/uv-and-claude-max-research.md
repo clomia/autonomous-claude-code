@@ -115,7 +115,7 @@ dependencies = []
 [project]
 name = "my-project"
 version = "0.1.0"
-description = "An autonomous Claude Code system"
+description = "A claude-automata system"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
@@ -502,7 +502,7 @@ Typical active Claude Code API users spend $60-90/month without optimization. He
 
 ---
 
-## Summary: Key Decisions for Autonomous Claude Code System
+## Summary: Key Decisions for claude-automata
 
 ### uv Setup
 

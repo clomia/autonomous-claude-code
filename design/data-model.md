@@ -64,7 +64,7 @@
   "properties": {
     "raw_input": {
       "type": "string",
-      "description": "Owner가 acc configure 시 입력한 원문 텍스트. 변경 불가. 시스템이 항상 원점을 참조할 수 있도록 보존한다.",
+      "description": "Owner가 automata configure 시 입력한 원문 텍스트. 변경 불가. 시스템이 항상 원점을 참조할 수 있도록 보존한다.",
       "minLength": 1
     },
     "purpose": {
@@ -1586,7 +1586,7 @@ all_thresholds_modifiable = true
 
 ## 초기 상태 (부트스트랩)
 
-`acc configure` 완료 후, Initialization Session 실행 전의 초기 상태이다. Initialization Session이 이 파일들을 채운다.
+`automata configure` 완료 후, Initialization Session 실행 전의 초기 상태이다. Initialization Session이 이 파일들을 채운다.
 
 ### `state/purpose.json` (초기)
 ```json
@@ -1600,7 +1600,7 @@ all_thresholds_modifiable = true
   "evolution_history": []
 }
 ```
-> Note: raw_input은 `acc configure`에서 설정. 나머지는 Initialization Session이 채운다.
+> Note: raw_input은 `automata configure`에서 설정. 나머지는 Initialization Session이 채운다.
 
 ### `state/strategy.json` (초기)
 ```json

@@ -119,7 +119,7 @@ claude-automata/
 │   └── app.py                     # Textual 대시보드
 ├── cli/                           # CLI 인터페이스
 │   ├── __init__.py
-│   └── main.py                    # `acc` 명령어
+│   └── main.py                    # `automata` 명령어
 ├── state/                         # 런타임 상태 (Git 추적)
 │   ├── purpose.json               # 구성된 Purpose
 │   ├── strategy.json              # 현재 전략
@@ -147,8 +147,8 @@ claude-automata/
 │   └── slack.log
 ├── setup/                         # 셋업
 │   ├── launchd/                   # LaunchAgent plist 템플릿
-│   │   ├── com.acc.supervisor.plist
-│   │   └── com.acc.watchdog.plist
+│   │   ├── com.clomia.automata.supervisor.plist
+│   │   └── com.clomia.automata.watchdog.plist
 │   └── slack_manifest.yaml        # Slack 앱 매니페스트
 ├── design/                        # 설계 문서 (이 디렉토리)
 ├── poc/                           # PoC 코드
@@ -235,7 +235,7 @@ claude-automata/
 ### 5.1 부트스트랩 (최초 실행)
 
 ```
-[Owner] clone 템플릿 → uv sync → uv run acc configure
+[Owner] clone 템플릿 → uv sync → uv run automata configure
                                       │
                           ┌────────────▼─────────────┐
                           │ 1. Slack 토큰 입력        │
@@ -244,7 +244,7 @@ claude-automata/
                           │ 4. .env 생성              │
                           └────────────┬─────────────┘
                                        │
-                          uv run acc start
+                          uv run automata start
                                        │
                           ┌────────────▼─────────────┐
                           │ LaunchAgent 설치          │
@@ -418,7 +418,7 @@ DISABLE_AUTOUPDATER=1                          # 자동 업데이트 방지
 
 Supervisor가 미션 프롬프트를 생성할 때, 인지 부하 극대화를 위한 4단계 실행 프로토콜을 포함한다. 상세: [cognitive-load-trigger.md](components/cognitive-load-trigger.md) §2.
 
-```
+```text
 당신은 claude-automata 시스템의 AI 에이전트입니다.
 
 ## 현재 상태
@@ -504,19 +504,19 @@ DISABLE_AUTOUPDATER=1                 # 자동 업데이트 방지
 
 ## 8. CLI 인터페이스
 
-엔트리포인트: `acc` (pyproject.toml의 `[project.scripts]`로 등록)
+엔트리포인트: `automata` (pyproject.toml의 `[project.scripts]`로 등록)
 
-```
-acc configure          # 초기 설정 (Slack 토큰, 목적 입력)
-acc start              # LaunchAgent 설치 + 시스템 시작
-acc stop               # 시스템 중지 + LaunchAgent 제거
-acc restart            # 재시작
-acc status             # 현재 상태 출력
-acc tui                # Textual TUI 실행
-acc logs [--follow]    # 로그 출력
-acc inject "<mission>" # 미션 큐에 수동 주입
-acc reset              # 마지막 체크포인트로 롤백
-acc purpose            # 현재 Purpose 출력
+```bash
+automata configure          # 초기 설정 (Slack 토큰, 목적 입력)
+automata start              # LaunchAgent 설치 + 시스템 시작
+automata stop               # 시스템 중지 + LaunchAgent 제거
+automata restart            # 재시작
+automata status             # 현재 상태 출력
+automata tui                # Textual TUI 실행
+automata logs [--follow]    # 로그 출력
+automata inject "<mission>" # 미션 큐에 수동 주입
+automata reset              # 마지막 체크포인트로 롤백
+automata purpose            # 현재 Purpose 출력
 ```
 
 ---
@@ -544,7 +544,7 @@ acc purpose            # 현재 Purpose 출력
 | **S-1** Friction 감지 | friction.json에 다양한 원천의 마찰 기록 |
 | **S-2** 자동 개선 | Friction 축적 임계값 도달 시 개선 Mission 자동 생성 |
 | **S-3** 사전 개선 | 주기적 시스템 검토 Mission (proactive_improvement_interval) |
-| **S-4** 무제한 범위 | CLAUDE.md, hooks, supervisor, tui 모두 개선 대상 |
+| **S-4** 무제한 범위 | CLAUDE.md, hooks, Supervisor, TUI 모두 개선 대상 |
 | **S-5** 임계값 개선 | config.toml의 모든 값이 Claude Code에 의해 수정 가능 |
 | **O-1** 비동기 위임 | Slack 스레드로 Owner에 요청, Blocker 시 다른 미션 수행 |
 | **O-2** Slack 채널 | slack-bolt async Socket Mode |
@@ -555,7 +555,7 @@ acc purpose            # 현재 Purpose 출력
 | **O-7** 실시간 TUI | Textual 기반 대시보드 |
 | **O-8** TUI 상호작용 | Mission 주입, 요청 응답 기능 |
 | **D-1** Template Repo | GitHub Template Repository 구조 |
-| **D-2** 즉시 동작 | `acc configure` → `acc start`로 부팅 |
+| **D-2** 즉시 동작 | `automata configure` → `automata start`로 부팅 |
 | **D-3** 업데이트 없음 | 자기개선이 업데이트 대체 |
 | **D-4** macOS | launchd LaunchAgent, Darwin 호환 |
 | **D-5** uv + Python 3.14 | pyproject.toml, uv run, uv sync |

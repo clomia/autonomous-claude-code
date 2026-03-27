@@ -34,8 +34,8 @@ def main():
     print("다음 단계:")
     print(f"  cd {dest.name}")
     print(f"  uv sync")
-    print(f"  uv run acc configure")
-    print(f"  uv run acc start")
+    print(f"  uv run automata configure")
+    print(f"  uv run automata start")
 
 if __name__ == "__main__":
     main()

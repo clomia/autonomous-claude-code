@@ -10,7 +10,7 @@ dependencies = [
 ]
 
 [project.scripts]
-acc = "cli.main:main"
+automata = "cli.main:main"
 
 [build-system]
 requires = ["hatchling"]

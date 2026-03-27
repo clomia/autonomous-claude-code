@@ -1092,7 +1092,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("acc.hook.notification")
+logger = logging.getLogger("automata.hook.notification")
 
 
 def write_notification_file(notification: dict) -> None:
@@ -1290,7 +1290,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
-logger = logging.getLogger("acc.hook.stop")  # or .session_start, .notification
+logger = logging.getLogger("automata.hook.stop")  # or .session_start, .notification
 
 # 결정 기록
 logger.info(
@@ -1306,10 +1306,10 @@ logger.info(
 
 로그 포맷 예:
 ```
-2026-03-25 10:30:00 [INFO] acc.hook.stop: Stop Hook 결정: block (reason: 다음 미션이 있습니다, session: session-abc-123, count: 3)
-2026-03-25 10:30:00 [DEBUG] acc.hook.stop: 다음 미션 선택: M-004 (priority: 1, title: API 구현)
-2026-03-25 10:35:00 [INFO] acc.hook.session_start: SessionStart Hook: type=compact, context_length=2048
-2026-03-25 10:35:00 [WARNING] acc.hook.notification: Idle prompt received (session: session-abc-123)
+2026-03-25 10:30:00 [INFO] automata.hook.stop: Stop Hook 결정: block (reason: 다음 미션이 있습니다, session: session-abc-123, count: 3)
+2026-03-25 10:30:00 [DEBUG] automata.hook.stop: 다음 미션 선택: M-004 (priority: 1, title: API 구현)
+2026-03-25 10:35:00 [INFO] automata.hook.session_start: SessionStart Hook: type=compact, context_length=2048
+2026-03-25 10:35:00 [WARNING] automata.hook.notification: Idle prompt received (session: session-abc-123)
 ```
 
 ---

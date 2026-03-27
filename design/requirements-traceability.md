@@ -57,7 +57,7 @@
 | **설계 결정** | 4중 방어 전략: (1) `--setting-sources project,local` — User 설정 로딩 차단, (2) `claudeMdExcludes` — 상위 CLAUDE.md 차단, (3) 격리된 환경 변수(`os.environ.copy()` 기반, 핵심 변수 덮어쓰기 및 오염 변수 제거) — Thinking/Effort 고정, (4) 프로젝트 `.claude/settings.json` — 시스템 전용 설정 |
 | **구현 위치** | Session Manager ([session-manager.md](components/session-manager.md) §4.2-4.3) — 명령 구성 + 격리 환경, 캡슐화 설계 ([encapsulation.md](encapsulation.md)) — 전체 격리 전략 |
 | **위협 모델** | 12개 위협 식별: User settings(T-1~T-6), CLAUDE.md 오염(T-7~T-9), 격리 불가(T-10~T-12). 9개 완전 차단, 3개 감지+경고 |
-| **검증 방법** | (1) Owner가 `/config`에서 Thinking off → 시스템 무영향 확인, (2) `~/dev/CLAUDE.md` 생성 → 시스템 무영향 확인, (3) `acc status`에서 격리 상태 표시 확인 |
+| **검증 방법** | (1) Owner가 `/config`에서 Thinking off → 시스템 무영향 확인, (2) `~/dev/CLAUDE.md` 생성 → 시스템 무영향 확인, (3) `automata status`에서 격리 상태 표시 확인 |
 
 #### E-2: 장애 불멸
 
@@ -167,8 +167,8 @@
 |------|------|
 | **설계 결정** | 세션 시작 전 `git tag checkpoint-{timestamp}-{label}` 생성. 롤백: `git checkout {tag} -- state/` |
 | **구현 위치** | State Manager ([state-manager.md](components/state-manager.md) §4), Supervisor ([supervisor.md](components/supervisor.md) §2 메인 루프) |
-| **CLI** | `acc reset` — 마지막 체크포인트로 롤백 |
-| **검증 방법** | 세션 시작 시마다 Git 태그가 생성됨. `acc reset` 후 이전 상태로 복원됨을 확인 |
+| **CLI** | `automata reset` — 마지막 체크포인트로 롤백 |
+| **검증 방법** | 세션 시작 시마다 Git 태그가 생성됨. `automata reset` 후 이전 상태로 복원됨을 확인 |
 
 ---
 
@@ -306,7 +306,7 @@
 |------|------|
 | **설계 결정** | Textual v8+ 기반 대시보드. 5개 탭: Dashboard, Mission Queue, Logs, Slack, Friction. 5초 주기 상태 파일 폴링, 실시간 로그 테일링 |
 | **구현 위치** | TUI ([tui.md](components/tui.md)) |
-| **실행** | `acc tui` → 독립 프로세스로 실행 |
+| **실행** | `automata tui` → 독립 프로세스로 실행 |
 | **검증 방법** | TUI에서 시스템 상태, 현재 미션, 로그, Slack 요청이 실시간으로 표시됨을 확인 |
 
 #### O-8: TUI 상호작용
@@ -330,7 +330,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| **설계 결정** | 프로젝트 구조가 Template Repository로 배포 가능. Clone 후 `acc configure`로 설정 |
+| **설계 결정** | 프로젝트 구조가 Template Repository로 배포 가능. Clone 후 `automata configure`로 설정 |
 | **구현 위치** | Directory Structure ([directory-structure.md](directory-structure.md)) |
 | **검증 방법** | GitHub에서 "Use this template"으로 새 레포 생성 후 정상 동작 확인 |
 
@@ -340,7 +340,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| **설계 결정** | `git clone` → `uv sync` → `uv run acc configure` (토큰, 목적 입력) → `uv run acc start` |
+| **설계 결정** | `git clone` → `uv sync` → `uv run automata configure` (토큰, 목적 입력) → `uv run automata start` |
 | **구현 위치** | CLI ([directory-structure.md](directory-structure.md) §7), Bootstrap Flow ([flows.md](flows.md) §1) |
 | **검증 방법** | 깨끗한 환경에서 4단계로 시스템이 완전히 동작함을 확인 |
 
@@ -370,9 +370,9 @@
 
 | 항목 | 내용 |
 |------|------|
-| **설계 결정** | `pyproject.toml`에 `requires-python = ">=3.14"`. `uv sync`로 의존성 설치. `uv run acc`로 실행. `.python-version` 파일에 "3.14" |
+| **설계 결정** | `pyproject.toml`에 `requires-python = ">=3.14"`. `uv sync`로 의존성 설치. `uv run automata`로 실행. `.python-version` 파일에 "3.14" |
 | **구현 위치** | Directory Structure ([directory-structure.md](directory-structure.md) §1 pyproject.toml) |
-| **검증 방법** | `uv sync` + `uv run acc start`로 정상 동작 확인 |
+| **검증 방법** | `uv sync` + `uv run automata start`로 정상 동작 확인 |
 
 #### D-6: Claude Max 구독
 

@@ -134,7 +134,7 @@ claude -p "<prompt>" \
 - Managed CLAUDE.md는 제외 불가 (문서에 명시).
 - 글로브 매칭의 에지 케이스가 미확인.
 
-**결정**: 사용한다. `acc configure` 시 조상 경로를 자동 생성하고, `acc status`에서 유효성을 검증한다. 프로젝트 이동 시 `acc configure`를 재실행하도록 안내한다.
+**결정**: 사용한다. `automata configure` 시 조상 경로를 자동 생성하고, `automata status`에서 유효성을 검증한다. 프로젝트 이동 시 `automata configure`를 재실행하도록 안내한다.
 
 ```python
 def generate_claude_md_excludes(project_dir: str) -> list[str]:
@@ -177,7 +177,7 @@ Tier 2 설정들을 포함한 프로젝트 설정 파일:
 ```json
 {
   "claudeMdExcludes": [
-    "...acc configure가 자동 생성..."
+    "...automata configure가 자동 생성..."
   ],
   "permissions": {
     "allow": [
@@ -264,7 +264,7 @@ Claude Code v2.1.83 기준.
 
 ---
 
-## 6. `acc status` 격리 진단
+## 6. `automata status` 격리 진단
 
 ```
 === 격리 상태 ===

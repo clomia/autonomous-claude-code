@@ -60,6 +60,7 @@ class SupervisorConfig:
     rate_limit_base_wait_s: float = 30.0
     friction_threshold: int = 3
     proactive_improvement_interval: int = 10  # 미션 수
+    owner_feedback_interval: int = 20         # 미션 수
 
 
 class Supervisor:
@@ -480,13 +481,13 @@ def _compute_health_metrics(self) -> dict:
     requests = self.state_manager.load_requests()
     missions = self.state_manager.load_missions()
 
-    unresolved = [f for f in friction.get("records", []) if not f.get("resolved_at")]
+    unresolved = [f for f in friction.get("frictions", []) if not f.get("resolved_at")]
     recent_sessions = sessions[-10:] if sessions else []
 
     # friction 추세: 최근 10세션의 friction 발생 수 vs 이전 10세션
-    recent_friction = [f for f in friction.get("records", [])
+    recent_friction = [f for f in friction.get("frictions", [])
                        if f.get("timestamp", "") > (recent_sessions[0].get("started_at", "") if recent_sessions else "")]
-    older_friction = [f for f in friction.get("records", [])
+    older_friction = [f for f in friction.get("frictions", [])
                       if f not in recent_friction and f.get("resolved_at")]
 
     if len(recent_friction) > len(older_friction) * 1.5:
@@ -499,13 +500,13 @@ def _compute_health_metrics(self) -> dict:
     # 개선 효과: 개선 미션이 해소한 friction 비율
     improvement_missions = [m for m in missions.get("missions", [])
                             if m.get("source") == "friction" and m.get("status") == "completed"]
-    resolved_by_improvement = [f for f in friction.get("records", [])
+    resolved_by_improvement = [f for f in friction.get("frictions", [])
                                 if f.get("resolved_by") and f.get("resolved_at")]
     effectiveness = (len(resolved_by_improvement) / len(improvement_missions)
                      if improvement_missions else 1.0)
 
     # Owner 상호작용 경과
-    answered = [r for r in requests.get("records", []) if r.get("answered_at")]
+    answered = [r for r in requests.get("requests", []) if r.get("answered_at")]
     last_interaction = max((r["answered_at"] for r in answered), default=None) if answered else None
     completed_since = sum(1 for m in missions.get("missions", [])
                           if m.get("status") == "completed"
@@ -844,7 +845,7 @@ async def shutdown(self, reason: str = "unknown") -> None:
 
 ## 4. launchd 구성
 
-### 4.1 com.acc.supervisor.plist
+### 4.1 com.clomia.automata.supervisor.plist
 
 Supervisor 프로세스를 macOS launchd LaunchAgent로 관리한다. 사용자 로그인 시 자동 시작되며, 크래시 시 자동 재시작된다.
 
@@ -857,14 +858,14 @@ Supervisor 프로세스를 macOS launchd LaunchAgent로 관리한다. 사용자 
 
     <!-- 서비스 식별자 -->
     <key>Label</key>
-    <string>com.acc.supervisor</string>
+    <string>com.clomia.automata.supervisor</string>
 
     <!-- 실행 명령 -->
     <key>ProgramArguments</key>
     <array>
         <!--
             uv run을 통해 프로젝트 가상환경에서 실행한다.
-            경로는 설치 시 acc configure가 실제 경로로 치환한다.
+            경로는 설치 시 automata configure가 실제 경로로 치환한다.
         -->
         <string>/Users/USERNAME/.local/bin/uv</string>
         <string>run</string>
@@ -959,7 +960,7 @@ Supervisor 프로세스를 macOS launchd LaunchAgent로 관리한다. 사용자 
 
 | 필드 | 값 | 설명 |
 |------|-----|------|
-| `Label` | `com.acc.supervisor` | launchd 서비스 고유 식별자 |
+| `Label` | `com.clomia.automata.supervisor` | launchd 서비스 고유 식별자 |
 | `KeepAlive` | `true` | 프로세스가 어떤 이유로든 종료되면 자동 재시작 |
 | `ThrottleInterval` | `10` | 재시작 간 최소 간격(초). 빠른 크래시 루프 방지 |
 | `ExitTimeOut` | `30` | SIGTERM 후 SIGKILL까지 대기(초). graceful shutdown 시간 |
@@ -994,7 +995,7 @@ Watchdog은 Supervisor와 독립적으로 실행되는 별도 LaunchAgent이다.
 3. 현재 시간과 heartbeat timestamp의 차이가 120초를 초과하면 "stale"로 판정한다.
 4. stale 판정 시 `launchctl kickstart -k` 명령으로 Supervisor를 강제 재시작한다.
 
-### 5.3 com.acc.watchdog.plist
+### 5.3 com.clomia.automata.watchdog.plist
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1004,7 +1005,7 @@ Watchdog은 Supervisor와 독립적으로 실행되는 별도 LaunchAgent이다.
 <dict>
 
     <key>Label</key>
-    <string>com.acc.watchdog</string>
+    <string>com.clomia.automata.watchdog</string>
 
     <key>ProgramArguments</key>
     <array>
@@ -1073,7 +1074,7 @@ from pathlib import Path
 # 설정 상수
 HEARTBEAT_FILE = Path(__file__).resolve().parent.parent / "run" / "supervisor.heartbeat"
 STALENESS_THRESHOLD_S = 120.0  # heartbeat가 이 시간 이상 오래되면 stale
-SUPERVISOR_SERVICE_TARGET = "gui/{uid}/com.acc.supervisor"
+SUPERVISOR_SERVICE_TARGET = "gui/{uid}/com.clomia.automata.supervisor"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -1171,13 +1172,13 @@ if __name__ == "__main__":
 
 ## 6. 설치/제거
 
-### 6.1 설치 (acc start)
+### 6.1 설치 (automata start)
 
-`acc start` 명령이 실행하는 설치 절차이다.
+`automata start` 명령이 실행하는 설치 절차이다.
 
 ```bash
 #!/bin/bash
-# acc start 내부에서 실행되는 설치 로직
+# automata start 내부에서 실행되는 설치 로직
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LAUNCH_AGENTS_DIR="${HOME}/Library/LaunchAgents"
@@ -1188,7 +1189,7 @@ mkdir -p "${PROJECT_ROOT}/logs"
 mkdir -p "${PROJECT_ROOT}/run"
 
 # 2. plist 파일 복사 (템플릿의 USERNAME을 실제 값으로 치환)
-for plist in com.acc.supervisor.plist com.acc.watchdog.plist; do
+for plist in com.clomia.automata.supervisor.plist com.clomia.automata.watchdog.plist; do
     sed \
         -e "s|/Users/USERNAME|${HOME}|g" \
         "${PROJECT_ROOT}/setup/launchd/${plist}" \
@@ -1196,31 +1197,31 @@ for plist in com.acc.supervisor.plist com.acc.watchdog.plist; do
 done
 
 # 3. LaunchAgent 등록 (bootstrap)
-launchctl bootstrap "gui/${UID_CURRENT}" "${LAUNCH_AGENTS_DIR}/com.acc.supervisor.plist"
-launchctl bootstrap "gui/${UID_CURRENT}" "${LAUNCH_AGENTS_DIR}/com.acc.watchdog.plist"
+launchctl bootstrap "gui/${UID_CURRENT}" "${LAUNCH_AGENTS_DIR}/com.clomia.automata.supervisor.plist"
+launchctl bootstrap "gui/${UID_CURRENT}" "${LAUNCH_AGENTS_DIR}/com.clomia.automata.watchdog.plist"
 
 echo "claude-automata 시스템이 시작되었습니다."
-echo "  Supervisor: launchctl print gui/${UID_CURRENT}/com.acc.supervisor"
-echo "  Watchdog:   launchctl print gui/${UID_CURRENT}/com.acc.watchdog"
+echo "  Supervisor: launchctl print gui/${UID_CURRENT}/com.clomia.automata.supervisor"
+echo "  Watchdog:   launchctl print gui/${UID_CURRENT}/com.clomia.automata.watchdog"
 ```
 
-### 6.2 제거 (acc stop)
+### 6.2 제거 (automata stop)
 
 ```bash
 #!/bin/bash
-# acc stop 내부에서 실행되는 제거 로직
+# automata stop 내부에서 실행되는 제거 로직
 
 LAUNCH_AGENTS_DIR="${HOME}/Library/LaunchAgents"
 UID_CURRENT=$(id -u)
 
 # 1. LaunchAgent 등록 해제 (bootout)
 # bootout은 SIGTERM을 전송하고 ExitTimeOut까지 대기한다
-launchctl bootout "gui/${UID_CURRENT}/com.acc.watchdog" 2>/dev/null
-launchctl bootout "gui/${UID_CURRENT}/com.acc.supervisor" 2>/dev/null
+launchctl bootout "gui/${UID_CURRENT}/com.clomia.automata.watchdog" 2>/dev/null
+launchctl bootout "gui/${UID_CURRENT}/com.clomia.automata.supervisor" 2>/dev/null
 
 # 2. plist 파일 삭제
-rm -f "${LAUNCH_AGENTS_DIR}/com.acc.supervisor.plist"
-rm -f "${LAUNCH_AGENTS_DIR}/com.acc.watchdog.plist"
+rm -f "${LAUNCH_AGENTS_DIR}/com.clomia.automata.supervisor.plist"
+rm -f "${LAUNCH_AGENTS_DIR}/com.clomia.automata.watchdog.plist"
 
 # 3. 런타임 파일 정리
 rm -f "${PROJECT_ROOT}/run/supervisor.pid"
@@ -1234,10 +1235,10 @@ echo "claude-automata 시스템이 중지되었습니다."
 
 ```bash
 # Supervisor 상태
-launchctl print gui/$(id -u)/com.acc.supervisor
+launchctl print gui/$(id -u)/com.clomia.automata.supervisor
 
 # Watchdog 상태
-launchctl print gui/$(id -u)/com.acc.watchdog
+launchctl print gui/$(id -u)/com.clomia.automata.watchdog
 
 # Heartbeat 확인
 cat run/supervisor.heartbeat

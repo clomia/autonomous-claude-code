@@ -6,6 +6,6 @@
 
 ```bash
 uv sync
-uv run acc configure
-uv run acc start
+uv run automata configure
+uv run automata start
 ```

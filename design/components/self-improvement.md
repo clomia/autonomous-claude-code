@@ -393,7 +393,7 @@ git tag checkpoint-si-{timestamp}
 근거: 최근 10건 friction 중 8건이 2회째에서 패턴 확정
 Git 태그: checkpoint-si-20260325-150000
 
-롤백 필요 시: `acc reset checkpoint-si-20260325-150000`
+롤백 필요 시: `automata reset checkpoint-si-20260325-150000`
 ```
 
 ### 6.5 무한 개선 루프 방지
