@@ -1,11 +1,5 @@
 _subdirectory: dist
-_templates_suffix: .jinja
 _min_copier_version: "9.0.0"
-
-project_name:
-  type: str
-  help: "프로젝트 디렉토리 이름"
-  default: "autonomous-claude-code"
 
 _exclude:
   - "*.pyc"
