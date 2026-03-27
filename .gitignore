@@ -1,0 +1,10 @@
+# 개발 전용
+.claude/settings.local.json
+
+# Python
+__pycache__/
+.venv/
+
+# OS
+.DS_Store
+CLAUDE.md

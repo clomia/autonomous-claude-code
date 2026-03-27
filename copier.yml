@@ -1,0 +1,21 @@
+_subdirectory: dist
+_templates_suffix: .jinja
+_min_copier_version: "9.0.0"
+
+project_name:
+  type: str
+  help: "프로젝트 디렉토리 이름"
+  default: "autonomous-claude-code"
+
+_exclude:
+  - "*.pyc"
+  - "__pycache__"
+  - ".DS_Store"
+  - "run/"
+  - "logs/"
+  - "state/archive/"
+
+_tasks:
+  - "git init"
+  - "git add -A"
+  - "git commit -m 'autonomous-claude-code 초기 스캐폴드'"

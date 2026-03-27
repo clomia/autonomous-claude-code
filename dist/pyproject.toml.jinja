@@ -1,0 +1,17 @@
+[project]
+name = "{{ project_name }}"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "textual>=8.0",
+    "slack-bolt>=1.27",
+    "slack-sdk>=3.41",
+    "aiohttp>=3.11",
+]
+
+[project.scripts]
+acc = "cli.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
