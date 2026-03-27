@@ -1,5 +1,6 @@
 _subdirectory: src
 _min_copier_version: "9.0.0"
+_vcs_ref: HEAD
 
 _exclude:
   - "*.pyc"
